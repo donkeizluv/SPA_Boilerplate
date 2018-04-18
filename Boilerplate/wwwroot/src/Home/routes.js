@@ -10,9 +10,17 @@ function requireAuth(to, from, next) {
         next({
             path: '/Login',
             query: { redirect: to.path }
-        })
+        });
     } else {
-        next()
+        next();
+    }
+}
+
+function requireNoAuth(to, from, next) {
+    if (store.getters.IsAuthenticated) {
+        next(false);
+    } else {
+        next();
     }
 }
 
@@ -25,6 +33,6 @@ const routes = [
     //Auth
     { path: '/Home', name: 'Home', component: hello, display: 'Trang chính', navbar: true, beforeEnter: requireAuth },
     //No auth
-    { path: '/Login', name: 'Login', component: login, display: 'Đăng nhập', navbar: false }];
+    { path: '/Login', name: 'Login', component: login, display: 'Đăng nhập', navbar: false, beforeEnter: requireNoAuth }];
 
 module.exports = routes;
